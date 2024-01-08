@@ -1,19 +1,32 @@
 """A DiscoDate discord bot."""
 import sys
-import interactions
+import os
+from dotenv import load_dotenv
+
+from interactions import Client, Intents, listen
 
 
-bot = interactions.Client()
+bot = Client(intents=Intents.DEFAULT, debug_scope=True)
+load_dotenv()
+
+TOKEN = os.getenv("DISCORD_TOKEN")
 
 
-@interactions.listen()
-async def on_startup():
-    """Start I guess."""
+@listen()
+async def on_ready():
+    """Listen for being ready."""
     print("Bot is ready!")
+
+
+@listen()
+async def on_message_create(event):
+    """Listen for messages being sent."""
+    print(f"message received: {event.message.content}")
 
 
 def main() -> int:
     """Do main things."""
+    bot.start(TOKEN)
     return 0
 
 
